@@ -1,0 +1,76 @@
+---
+title: "Rマークダウンサンプル"
+author: "ohtsuka"
+date: "2019/4/4"
+output: word_document
+---
+```{r setup, include=F}
+# レポートの最初にセットアップチャンクを記載します。
+# レポート全体の設定をここで行います。
+# ↓echo=Tならソースコードを出力する、Fなら出力しない。
+# ↓commentは結果の行頭に挿入する文字を指定する。comment=NAなら結果の行頭に何も挿入しない。
+knitr::opts_chunk$set(echo=F, comment=NA)
+```
+```{r initialize, include=F}
+# パッケージの読み込みなどあればここで行います。
+library(dplyr)
+library(knitr)  #kable関数を使うためにknitrパッケージをここで読み込みます
+```
+
+# R Markdownの見本です
+
+この白いところにはマークダウン形式の文書を記述します。  
+改行するには行末に半角空白を二ついれます。  
+
+## フランスのIlle-et-Vilaineにおける（o）食道癌の症例対照研究からのデータ
+[esoph](https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/esoph.html)  
+**上記のURLに記載されている内容を元に色々やってみます。**
+```{r esoph1}
+# kable関数…データフレームをマークアップ言語形式の表に変換する
+kable(esoph, format="markdown")
+```
+## esoph フォーマット
+### agegp
+```{r esoph_age}
+data.frame(水準=labels(levels(esoph$agegp)), 年齢層=levels(esoph$agegp)) %>% kable(format="markdown")
+```
+### alcgp
+```{r esoph_alc}
+data.frame(水準=labels(levels(esoph$alcgp)), アルコール消費量=levels(esoph$alcgp)) %>% kable(format="markdown")
+```
+### tobgp
+```{r esoph_tob}
+data.frame(水準=labels(levels(esoph$tobgp)), タバコ消費量=levels(esoph$tobgp)) %>% kable(format="markdown")
+```
+### ncases
+ケース数  
+
+### ncontrols
+コントロール数	
+```{r esoph_summary, echo=T}
+summary(esoph)
+```
+## アルコール、タバコおよび相互作用の影響、年齢調整
+```{r esoph_model1, echo=T}
+model1 <- glm(cbind(ncases, ncontrols) ~ agegp + tobgp * alcgp,
+              data = esoph, family = binomial())
+anova(model1)
+```
+## アルコールとタバコの線形効果
+```{r esoph_model2, echo=T}
+model2 <- glm(cbind(ncases, ncontrols) ~ agegp + unclass(tobgp)
+                                         + unclass(alcgp),
+              data = esoph, family = binomial())
+summary(model2)
+```
+## モザイクプロットのデータを並べ替える
+```{r esoph_ttt}
+ttt <- table(esoph$agegp, esoph$alcgp, esoph$tobgp)
+o <- with(esoph, order(tobgp, alcgp, agegp))
+ttt[ttt == 1] <- esoph$ncases[o]
+tt1 <- table(esoph$agegp, esoph$alcgp, esoph$tobgp)
+tt1[tt1 == 1] <- esoph$ncontrols[o]
+tt <- array(c(ttt, tt1), c(dim(ttt),2),
+            c(dimnames(ttt), list(c("Cancer", "control"))))
+mosaicplot(tt, main = "esoph data set", color = TRUE)
+```
