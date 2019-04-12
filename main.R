@@ -5,7 +5,7 @@
 # 初回のみrmarkdown, knitrパッケージのインストールが必要です。
 # install.packages("rmarkdown")
 # install.packages("knitr")
-# rmarkdown, knitrパッケージの機能を使えるようにします。
+# rmarkdown, knitr, dplyrパッケージの機能を使えるようにします。
 library(rmarkdown)
 library(knitr)
 # echo=Tにすると出力ファイルにソースコードを出力します。
@@ -13,6 +13,6 @@ library(knitr)
 knitr::opts_chunk$set(echo=F, comment=NA)
 # body.Rの実行結果をoutput_dirで指定したフォルダのoutput_fileに出力します。
 render("/Users/admin/Documents/GitHub/R_markdown_sample/body.R",
-       output_format=html_document(),
+       output_format=word_document(),
        output_dir="/Users/admin/Documents/GitHub/R_markdown_sample/output",
-       output_file="output.html")
+       output_file="output.docx")

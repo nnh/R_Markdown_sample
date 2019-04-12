@@ -13,7 +13,6 @@ knitr::opts_chunk$set(echo=F, comment=NA)
 ```
 ```{r initialize, include=F}
 # パッケージの読み込みなどあればここで行います。
-library(dplyr)
 library(knitr)  #kable関数を使うためにknitrパッケージをここで読み込みます
 ```
 
@@ -32,21 +31,23 @@ kable(esoph, format="markdown")
 ## esoph フォーマット
 ### agegp
 ```{r esoph_age}
-data.frame(水準=labels(levels(esoph$agegp)), 年齢層=levels(esoph$agegp)) %>% kable(format="markdown")
+kable(data.frame(水準=labels(levels(esoph$agegp)), 年齢層=levels(esoph$agegp)), format="markdown")
 ```
 ### alcgp
 ```{r esoph_alc}
-data.frame(水準=labels(levels(esoph$alcgp)), アルコール消費量=levels(esoph$alcgp)) %>% kable(format="markdown")
+kable(data.frame(水準=labels(levels(esoph$alcgp)), アルコール消費量=levels(esoph$alcgp)), format="markdown")
 ```
 ### tobgp
 ```{r esoph_tob}
-data.frame(水準=labels(levels(esoph$tobgp)), タバコ消費量=levels(esoph$tobgp)) %>% kable(format="markdown")
+kable(data.frame(水準=labels(levels(esoph$tobgp)), タバコ消費量=levels(esoph$tobgp)), format="markdown")
 ```
 ### ncases
 ケース数  
 
 ### ncontrols
-コントロール数	
+コントロール数
+
+## summary
 ```{r esoph_summary, echo=T}
 summary(esoph)
 ```

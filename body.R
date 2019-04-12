@@ -1,29 +1,56 @@
 #' ---
-#' title: タイトルをここに書きます
-#' author: 作成者名をここに書きます
+#' title: "Rマークダウンサンプル"
+#' author: "ohtsuka"
+#' date: "2019/4/4"
 #' ---
-# ' body.R
-# ' Created date: 2019/3/11
-# ' author: mariko ohtsuka
-input_csv <- read.csv("/Users/admin/Documents/GitHub/R_markdown_sample/input/input.csv", as.is=T, fileEncoding="utf-8",
-                      stringsAsFactors=F)
-# SEX=0:男性、1:女性として性別を集計
-input_csv$SEX_str <- ifelse(input_csv$SEX == 0, "男性", "女性")
-sex_table <- aggregate(input_csv$SEX_str, by=list(input_csv$SEX_str), length, drop=F)
-# sex_tableに列名をつける
-colnames(sex_table) <- c("性別", "人数")
-
-header1_string <- "見出し1です"
-header2_string <- 100
-#' # `r header1_string`
-#' ## n=`r header2_string`
-#' ### 性別の見出し3です
-kable(sex_table, format = "markdown")
-# データセットを性別で分ける
-df_m <- subset(input_csv, SEX==0)
-df_f <- subset(input_csv, SEX==1)
-# 性別毎にBMIのsummaryを出し、データフレームを結合する
-df_bmi <- cbind(summary(df_m$BMI), summary(df_f$BMI))
-# df_bmiに列名をつける
-colnames(df_bmi) <- c("男性", "女性")
-kable(df_bmi, format = "markdown")
+#' # R Markdownの見本です
+#' 「#' 」の後にマークダウン形式の文書を記述します。
+#'
+#' 「#' 」だけの行を入れると改行します。
+#'
+#' ## フランスのIlle-et-Vilaineにおける（o）食道癌の症例対照研究からのデータ
+#'
+#' [esoph](https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/esoph.html)
+#'
+#' **上記のURLに記載されている内容を元に色々やってみます。**
+#'
+# #だけのコメントは出力されません
+# kable関数…データフレームをマークアップ言語形式の表に変換する
+kable(esoph, format="markdown")
+#' ## esoph フォーマット
+#' ### agegp
+kable(data.frame(水準=labels(levels(esoph$agegp)), 年齢層=levels(esoph$agegp)), format="markdown")
+#' ### alcgp
+kable(data.frame(水準=labels(levels(esoph$alcgp)), アルコール消費量=levels(esoph$alcgp)), format="markdown")
+#' ### tobgp
+kable(data.frame(水準=labels(levels(esoph$tobgp)), タバコ消費量=levels(esoph$tobgp)), format="markdown")
+#' ### ncases
+#' ケース数
+#'
+#' ### ncontrols
+#' コントロール数
+#'
+#' ## summary
+# 「#+ 」の後にチャンクオプションを記載します。
+#+ echo=T
+summary(esoph)
+#+ echo=T
+#' ## アルコール、タバコおよび相互作用の影響、年齢調整
+model1 <- glm(cbind(ncases, ncontrols) ~ agegp + tobgp * alcgp,
+              data = esoph, family = binomial())
+anova(model1)
+#' ## アルコールとタバコの線形効果
+#+ echo=T
+model2 <- glm(cbind(ncases, ncontrols) ~ agegp + unclass(tobgp)
+              + unclass(alcgp),
+              data = esoph, family = binomial())
+summary(model2)
+#' ## モザイクプロットのデータを並べ替える
+ttt <- table(esoph$agegp, esoph$alcgp, esoph$tobgp)
+o <- with(esoph, order(tobgp, alcgp, agegp))
+ttt[ttt == 1] <- esoph$ncases[o]
+tt1 <- table(esoph$agegp, esoph$alcgp, esoph$tobgp)
+tt1[tt1 == 1] <- esoph$ncontrols[o]
+tt <- array(c(ttt, tt1), c(dim(ttt),2),
+            c(dimnames(ttt), list(c("Cancer", "control"))))
+mosaicplot(tt, main = "esoph data set", color = TRUE)
