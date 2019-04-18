@@ -3,11 +3,14 @@
 #' author: "ohtsuka"
 #' date: "2019/4/4"
 #' ---
+# ------
+# ここまでがメタ情報
 #' # R Markdownの見本です
 #' 「#' 」の後にマークダウン形式の文書を記述します。
 #'
 #' 「#' 」だけの行を入れると改行します。
 #'
+# ------
 #' ## フランスのIlle-et-Vilaineにおける（o）食道癌の症例対照研究からのデータ
 #'
 #' [esoph](https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/esoph.html)

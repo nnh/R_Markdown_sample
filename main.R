@@ -5,7 +5,7 @@
 # 初回のみrmarkdown, knitrパッケージのインストールが必要です。
 # install.packages("rmarkdown")
 # install.packages("knitr")
-# rmarkdown, knitr, dplyrパッケージの機能を使えるようにします。
+# rmarkdown, knitrパッケージの機能を使えるようにします。
 library(rmarkdown)
 library(knitr)
 # echo=Tにすると出力ファイルにソースコードを出力します。

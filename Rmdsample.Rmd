@@ -20,6 +20,9 @@ library(knitr)  #kable関数を使うためにknitrパッケージをここで�
 
 この白いところにはマークダウン形式の文書を記述します。  
 改行するには行末に半角空白を二ついれます。  
+ここでRのプログラムを動かすこともできます。
+（例）1から10の総和は`r sum(1:10)`です  
+空白行を入れると段落になります。
 
 ## フランスのIlle-et-Vilaineにおける（o）食道癌の症例対照研究からのデータ
 [esoph](https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/esoph.html)  
